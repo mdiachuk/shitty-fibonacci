@@ -10,12 +10,12 @@ script:
   - docker run -e CI=true ui-test npm test -- --coverage
 
 after_success:
-  - docker build -t fibonacci-ui ./ui
-  - docker build -t fibonacci-api ./api
-  - docker build -t fibonacci-worker ./worker
-  - docker build -t fibonacci-nginx ./nginx
+  - docker build -t $DOCKER_ID/fibonacci-ui ./ui
+  - docker build -t $DOCKER_ID/fibonacci-api ./api
+  - docker build -t $DOCKER_ID/fibonacci-worker ./worker
+  - docker build -t $DOCKER_ID/fibonacci-nginx ./nginx
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-  - docker push fibonacci-ui
-  - docker push fibonacci-api
-  - docker push fibonacci-worker
-  - docker push fibonacci-nginx
+  - docker push $DOCKER_ID/fibonacci-ui
+  - docker push $DOCKER_ID/fibonacci-api
+  - docker push $DOCKER_ID/fibonacci-worker
+  - docker push $DOCKER_ID/fibonacci-nginx
