@@ -1,0 +1,21 @@
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - docker build -t ui-test -f ./ui/Dockerfile.dev ./ui
+
+script:
+  - docker run -e CI=true ui-test npm test -- --coverage
+
+after_success:
+  - docker build -t fibonacci-ui ./ui
+  - docker build -t fibonacci-api ./api
+  - docker build -t fibonacci-worker ./worker
+  - docker build -t fibonacci-nginx ./nginx
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push fibonacci-ui
+  - docker push fibonacci-api
+  - docker push fibonacci-worker
+  - docker push fibonacci-nginx
